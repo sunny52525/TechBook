@@ -1,5 +1,12 @@
 package com.example.techbook.common
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Badge
+import androidx.compose.material.icons.filled.Feed
+import androidx.compose.material.icons.filled.People
+import com.example.techbook.domain.model.BottomNavItem
+import com.example.techbook.presentation.home.navigation.Routes
+
 object Constants {
     val collegeList = listOf(
         "A. D. Patel Institute of Technology",
@@ -1413,5 +1420,22 @@ object Constants {
         "SNS College of Technology",
         "RVS College of engineering and technology",
         "Nehru Institute OF Engineering & Technology",
+    )
+    val BottomNavItems = listOf(
+        BottomNavItem(
+            label = "Feed",
+            icon = Icons.Filled.Feed,
+            route = Routes.Home.route
+        ),
+        BottomNavItem(
+            label = "My Profile",
+            icon = Icons.Filled.People,
+            route = Routes.Profile.route
+        ),
+        BottomNavItem(
+            label = "Add Badge",
+            icon = Icons.Filled.Badge,
+            route = Routes.AddBadge.route
+        )
     )
 }

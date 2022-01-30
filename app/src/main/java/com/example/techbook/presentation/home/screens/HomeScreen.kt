@@ -23,8 +23,6 @@ fun HomeScreen() {
         }
     }) {
         Text("Logout")
-
-
     }
 
 }

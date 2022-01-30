@@ -18,7 +18,7 @@
             android:name=".presentation.home.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
-            android:theme="@style/Theme.TechBookSocialMediaForProgrammers" />
+            android:theme="@style/Theme.HomeScreen" />
         <activity
             android:name=".presentation.auth.screens.AuthActivity"
             android:exported="true">

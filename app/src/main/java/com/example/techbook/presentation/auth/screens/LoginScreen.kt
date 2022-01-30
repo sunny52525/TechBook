@@ -243,7 +243,7 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.height(50.dp))
 
                     Text(
-                        text = "Don't have an account?",
+                        text = if (isSignIn) "Don't have an account?" else "Already have an account?",
                         fontWeight = FontWeight.Bold,
                         fontFamily = poppins,
                         fontSize = 18.sp,

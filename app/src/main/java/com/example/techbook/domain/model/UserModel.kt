@@ -1,11 +1,11 @@
 package com.example.techbook.domain.model
 
 data class UserModel(
-    val name:String,
+    val name:String="",
     val id:String?=null,
     val iconUrl:String?=null,
-    val college:String,
-    val email:String,
+    val college:String="",
+    val email:String="",
 ){
     fun toHashMap():HashMap<String,String?>{
         val map = HashMap<String,String?>()
@@ -16,4 +16,5 @@ data class UserModel(
         map["email"] = email
         return map
     }
+
 }
