@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.techbook.common.noRippleClickable
 import com.example.techbook.presentation.auth.component.ExtendedButton
 import com.example.techbook.presentation.auth.component.ExtendedTextField
 import com.example.techbook.presentation.auth.component.HeaderArt
@@ -40,11 +41,12 @@ import com.example.techbook.ui.theme.poppins
 fun LoginScreen(
     email: String,
     password: String,
-    isSignIn: Boolean=true,
+    isSignIn: Boolean = true,
     verifySignIn: () -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRegisterClicked: () -> Unit,
+    onForgotPasswordClicked: () -> Unit,
 ) {
     val focusRequester = FocusRequester()
     val scroller = rememberScrollState()
@@ -117,10 +119,12 @@ fun LoginScreen(
                         fontFamily = poppins,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp),
+                            .padding(top = 16.dp)
+                            .noRippleClickable(onClick = onForgotPasswordClicked),
                         textAlign = TextAlign.End,
                         fontSize = 18.sp,
                         color = Color.Gray,
+
 
                         )
 
@@ -206,7 +210,8 @@ fun Login() {
         password = "test",
         verifySignIn = { /*TODO*/ },
         onEmailChange = {},
-        onPasswordChange = {}
+        onPasswordChange = {},
+        onRegisterClicked = {},
     ) {
 
     }

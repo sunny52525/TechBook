@@ -17,7 +17,7 @@ fun ErrorDialog(message: String,onDismiss: () -> Unit) {
 
         }, onDismissRequest =onDismiss,
         title = {
-            Text(text = "Error", color = Black, modifier = Modifier.padding(grid_2))
+            Text(text = "Message", color = Black, modifier = Modifier.padding(grid_2))
         },
         buttons = {
 

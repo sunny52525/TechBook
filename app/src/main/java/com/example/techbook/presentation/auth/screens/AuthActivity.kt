@@ -43,7 +43,6 @@ class AuthActivity : ComponentActivity() {
                 LoadingDialog()
             }
             if (isError.isError) {
-                showToast("error")
                 ErrorDialog(isError.message) {
                     viewModel.setIsError(isError = false)
                 }
@@ -85,6 +84,26 @@ class AuthActivity : ComponentActivity() {
                     viewModel.setSignIn(isSignIn.not())
                 },
                 isSignIn = isSignIn,
+                onForgotPasswordClicked = {
+
+                    if (email.trim().isBlank()) {
+                        showToast("Please enter email")
+                    } else {
+                        auth.sendPasswordResetEmail(email.trim())
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    viewModel.setIsError(
+                                        error = "Password reset email sent",
+                                    )
+                                } else {
+                                    viewModel.setIsError(
+                                        error = task.exception?.message.toString(),
+                                    )
+                                }
+                            }
+                    }
+
+                }
             )
 
         }
@@ -94,7 +113,6 @@ class AuthActivity : ComponentActivity() {
 
 
     private fun signInUser(email: String, password: String, onError: (String) -> Unit = {}) {
-
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
