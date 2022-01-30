@@ -1,17 +1,21 @@
 package com.example.techbook.presentation.home.components
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.example.techbook.ui.theme.Dimens.grid_1
 import com.example.techbook.ui.theme.Dimens.grid_1_25
 import com.example.techbook.ui.theme.Dimens.grid_1_5
@@ -156,6 +160,52 @@ fun MoreDetails(moreDetail: String = "", onMoreDetailChange: (String) -> Unit = 
                 )
             }
         )
+    }
+}
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun AddImages(imageLinks: List<String?>, onAddImageClicked: () -> Unit) {
+    Column {
+        Text(text = "Add Images(max 5)", style = MaterialTheme.typography.body1)
+        Spacer(modifier = Modifier.height(grid_1_5))
+        Row(
+            Modifier.horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(grid_1_5)
+        ) {
+            Card(
+                onClick = onAddImageClicked,
+                border = BorderStroke(1.dp, Orange200),
+                shape = RoundedCornerShape(grid_1_25),
+                modifier = Modifier.size(100.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "",
+                    modifier = Modifier.fillMaxSize(),
+                    tint = Orange200
+                )
+
+            }
+
+            imageLinks.forEach { link ->
+                Card(
+                    border = BorderStroke(1.dp, Orange200),
+                    shape = RoundedCornerShape(grid_1_25),
+                    modifier = Modifier.size(100.dp)
+                ) {
+                    Image(
+                        painter = rememberImagePainter(link),
+                        contentDescription = "",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+
+                }
+            }
+
+        }
     }
 }
 

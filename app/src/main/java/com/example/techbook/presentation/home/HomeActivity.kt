@@ -1,6 +1,9 @@
 package com.example.techbook.presentation.home
 
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -13,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.techbook.presentation.components.ErrorDialog
+import com.example.techbook.presentation.components.LoadingDialog
 import com.example.techbook.presentation.home.components.NavigationBar
 import com.example.techbook.presentation.home.navigation.Routes
 import com.example.techbook.presentation.home.screens.AddBadgeScreen
@@ -42,12 +47,23 @@ class HomeActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
 
+                    val imageList by viewModel.imageList
                     val user by viewModel.user
                     Scaffold(
                         bottomBar = { NavigationBar(navController = navController) }
                     ) {
 
+                        val isError by viewModel.uiState
 
+                        if (isError.isLoading) {
+
+                            LoadingDialog()
+                        }
+                        if (isError.isError) {
+                            ErrorDialog(isError.message) {
+                                viewModel.setIsError(isError = false)
+                            }
+                        }
                         NavHost(
                             navController = navController,
                             startDestination = Routes.Home.route
@@ -62,7 +78,23 @@ class HomeActivity : ComponentActivity() {
 
                             }
                             composable(Routes.AddBadge.route) {
-                                AddBadgeScreen()
+
+                                AddBadgeScreen(imageUrlList = imageList, onImageSelected = {
+                                    val bitmap = if (Build.VERSION.SDK_INT < 28) {
+                                        MediaStore.Images
+                                            .Media.getBitmap(this@HomeActivity.contentResolver, it)
+                                    } else {
+                                        val source = ImageDecoder
+                                            .createSource(contentResolver, it)
+                                        ImageDecoder.decodeBitmap(source)
+                                    }
+                                    viewModel.uploadImage(bitmap)
+
+                                }) { badge ->
+                                    viewModel.addBadge(badge) {
+                                        navController.navigate(Routes.Home.route)
+                                    }
+                                }
                             }
 
 

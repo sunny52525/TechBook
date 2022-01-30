@@ -7,6 +7,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 
 object ExtensionFunctions {
     //showToast
@@ -19,4 +21,9 @@ inline fun Modifier.noRippleClickable(crossinline onClick: ()->Unit): Modifier =
         interactionSource = remember { MutableInteractionSource() }) {
         onClick()
     }
+}
+
+@ExperimentalPermissionsApi
+fun PermissionState.isPermanentlyDenied(): Boolean {
+    return !shouldShowRationale && !hasPermission
 }
