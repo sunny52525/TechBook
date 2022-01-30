@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1014947337779",
+    "project_id": "techbook-50460",
+    "storage_bucket": "techbook-50460.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014947337779:android:bc9bf248d5f34f303cb546",
+        "android_client_info": {
+          "package_name": "com.example.techbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1014947337779-pa0qbddh4vjtj75tuakbioqb9bgefi7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3R4RBqEsHl2MNAXo4NyqO709rmoUe6dI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1014947337779-pa0qbddh4vjtj75tuakbioqb9bgefi7s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
