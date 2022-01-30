@@ -8,6 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.techbook.common.ExtensionFunctions.showToast
 import com.example.techbook.presentation.auth.AuthViewModel
@@ -16,10 +19,13 @@ import com.example.techbook.presentation.components.LoadingDialog
 import com.example.techbook.presentation.home.HomeActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 class AuthActivity : ComponentActivity() {
 
+    private val viewModel by viewModels<AuthViewModel>()
     private val auth by lazy {
         Firebase.auth
     }
@@ -28,13 +34,17 @@ class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel by viewModels<AuthViewModel>()
         setContent {
             val email by viewModel.email
 
             val password by viewModel.password
             val isSignIn by viewModel.isSignIn
 
+            val name by viewModel.name
+            val year by viewModel.year
+            val college by viewModel.college
+
+            var dropdownExpanded by remember { mutableStateOf(false) }
 
             val isError by viewModel.isError
 
@@ -53,6 +63,9 @@ class AuthActivity : ComponentActivity() {
             LoginScreen(
                 email = email,
                 password = password,
+                name = name,
+                year = year,
+                college = college,
                 verifySignIn = {
 
                     if (viewModel.isValidEmail(email = email).not()) {
@@ -110,6 +123,14 @@ class AuthActivity : ComponentActivity() {
                             }
                     }
 
+                },
+                onYearChanged = viewModel::setYear,
+                onCollegeChanged = viewModel::setCollege,
+                onNameChanged = viewModel::setName,
+                dropDownExpanded = dropdownExpanded,
+                onDropDownClicked = {
+
+                    dropdownExpanded = dropdownExpanded.not()
                 }
             )
 
@@ -124,6 +145,8 @@ class AuthActivity : ComponentActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+
+
                     startActivity(Intent(this, HomeActivity::class.java))
                     finish()
 
@@ -137,8 +160,12 @@ class AuthActivity : ComponentActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    startActivity(Intent(this, HomeActivity::class.java))
-                    finish()
+
+                    viewModel.createUser {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                        finish()
+                    }
+
                 } else {
                     onError(task.exception?.message.toString())
                 }

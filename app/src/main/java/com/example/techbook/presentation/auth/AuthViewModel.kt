@@ -3,8 +3,16 @@ package com.example.techbook.presentation.auth
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.techbook.domain.model.UiState
+import com.example.techbook.domain.model.UserModel
+import com.example.techbook.domain.use_case.CreateUserUserCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel() {
+
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val createUserUserCase: CreateUserUserCase
+) : ViewModel() {
 
     var email = mutableStateOf("")
         private set
@@ -18,6 +26,28 @@ class AuthViewModel : ViewModel() {
 
     var isError = mutableStateOf(UiState())
         private set
+
+    var name = mutableStateOf("")
+        private set
+
+    var year = mutableStateOf("")
+        private set
+    var college = mutableStateOf("Select College")
+        private set
+
+
+    fun setCollege(college: String) {
+        this.college.value = college
+    }
+
+    fun setYear(year: String) {
+        this.year.value = year
+    }
+
+    fun setName(name: String) {
+        this.name.value = name
+    }
+
 
     fun setIsError(message: String = "", isError: Boolean = true) {
         this.isError.value = UiState(message = message, isError = isError, isLoading = false)
@@ -45,4 +75,23 @@ class AuthViewModel : ViewModel() {
     fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
+
+
+    fun createUser(onSuccess: () -> Unit) {
+        createUserUserCase(
+            user = UserModel(
+                name = name.value,
+                college = college.value,
+                email = email.value,
+            ), onSuccess = {
+                onSuccess()
+
+            }, onError = {
+
+                setIsError(it.toString())
+            }
+
+        )
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.example.techbook.presentation.auth.screens
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +32,7 @@ import com.example.techbook.presentation.auth.component.ExtendedButton
 import com.example.techbook.presentation.auth.component.ExtendedTextField
 import com.example.techbook.presentation.auth.component.HeaderArt
 import com.example.techbook.presentation.auth.component.LogoText
+import com.example.techbook.presentation.components.CollegeDialog
 import com.example.techbook.ui.theme.Orange200
 import com.example.techbook.ui.theme.OrangeDark
 import com.example.techbook.ui.theme.poppins
@@ -42,6 +45,14 @@ fun LoginScreen(
     email: String,
     password: String,
     isSignIn: Boolean = true,
+    name: String = "",
+    dropDownExpanded: Boolean = false,
+    onDropDownClicked: () -> Unit,
+    year: String = "",
+    college: String = "",
+    onNameChanged: (String) -> Unit,
+    onYearChanged: (String) -> Unit,
+    onCollegeChanged: (String) -> Unit,
     verifySignIn: () -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -55,11 +66,15 @@ fun LoginScreen(
             .fillMaxSize()
             .verticalScroll(scroller)
             .background(Color.White)
+            .animateContentSize()
     ) {
 
         HeaderArt()
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .animateContentSize()
+
         ) {
             Spacer(modifier = Modifier.height(50.dp))
             LogoText(color = Color.White, modifier = Modifier.padding(start = 26.dp))
@@ -76,6 +91,69 @@ fun LoginScreen(
                         .padding(start = 26.dp, end = 26.dp, top = 100.dp),
                 ) {
 
+                    Spacer(modifier = Modifier.height(28.dp))
+
+
+                    if (isSignIn.not()) {
+                        ExtendedTextField(
+                            text = name,
+                            icon = Icons.Filled.Person,
+                            textColor = Color.Gray,
+                            iconTint = Orange200,
+                            placeHolder = "Name",
+                            imeAction = ImeAction.Next,
+                            onChange = onNameChanged,
+                            backgroundColor = Color.White
+                        ) {
+
+
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(vertical = 26.dp)
+                                .fillMaxWidth()
+                                .clickable {
+                                    onDropDownClicked()
+
+                                },
+                            horizontalAlignment = Alignment.CenterHorizontally,
+
+                            ) {
+                            Text(
+                                text = college,
+                                modifier = Modifier
+                                    .padding(start = 26.dp)
+                                    .height(44.dp)
+
+                                    .fillMaxWidth(), textAlign = TextAlign.Start
+                            )
+                            Divider(color = Orange200)
+                        }
+
+                        if (dropDownExpanded) {
+                            CollegeDialog(onDismiss = { onDropDownClicked() }) {
+                                onDropDownClicked()
+                                onCollegeChanged(it)
+                            }
+                        }
+
+
+                        ExtendedTextField(
+                            text = year,
+                            icon = Icons.Filled.Person,
+                            textColor = Color.Gray,
+                            iconTint = Orange200,
+                            placeHolder = "Year(eg. 2020-2024)",
+                            imeAction = ImeAction.Next,
+                            onChange = onYearChanged,
+                            backgroundColor = Color.White
+                        ) {
+
+
+                        }
+
+                    }
+
                     ExtendedTextField(
                         text = email,
                         icon = Icons.Filled.Person,
@@ -87,12 +165,8 @@ fun LoginScreen(
                         backgroundColor = Color.White
                     ) {
 
-                        focusRequester.requestFocus()
 
                     }
-
-                    Spacer(modifier = Modifier.height(48.dp))
-
 
                     ExtendedTextField(
                         text = password,
@@ -212,8 +286,15 @@ fun Login() {
         onEmailChange = {},
         onPasswordChange = {},
         onRegisterClicked = {},
-    ) {
-
-    }
-
+        isSignIn = false,
+        onNameChanged = {},
+        onYearChanged = {},
+        onCollegeChanged = {},
+        onForgotPasswordClicked = {},
+        name = "",
+        dropDownExpanded = false,
+        onDropDownClicked = {},
+        year = "",
+        college = "",
+    )
 }
