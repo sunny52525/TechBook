@@ -19,8 +19,8 @@ class AuthViewModel : ViewModel() {
     var isError = mutableStateOf(UiState())
         private set
 
-    fun setIsError(error: String = "", isError: Boolean = true) {
-        this.isError.value = UiState(message = error, isError = isError, isLoading = false)
+    fun setIsError(message: String = "", isError: Boolean = true) {
+        this.isError.value = UiState(message = message, isError = isError, isLoading = false)
     }
 
     fun setLoading(isLoading: Boolean = true) {
@@ -41,4 +41,8 @@ class AuthViewModel : ViewModel() {
         this.password.value = password
     }
 
+
+    fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
 }

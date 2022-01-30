@@ -54,28 +54,35 @@ class AuthActivity : ComponentActivity() {
                 email = email,
                 password = password,
                 verifySignIn = {
-                    viewModel.setLoading()
-                    if (isSignIn) {
-                        signInUser(
-                            email = email.trim(),
-                            password = password.trim()
-                        ) { errorString ->
-                            Log.d("TAG", "onCreate: $errorString")
-                            viewModel.setIsError(
-                                error = errorString,
-                            )
-                        }
-                    } else {
-                        signUpUser(
-                            email = email.trim(),
-                            password = password.trim()
-                        ) { errorString ->
-                            Log.d("TAG", "onCreate: $errorString")
 
-                            viewModel.setIsError(
-                                error = errorString,
-                            )
+                    if (viewModel.isValidEmail(email = email).not()) {
+                        viewModel.setIsError(isError = true, message = "Email is not valid")
+                    } else {
+
+                        viewModel.setLoading()
+                        if (isSignIn) {
+                            signInUser(
+                                email = email.trim(),
+                                password = password.trim()
+                            ) { errorString ->
+                                Log.d("TAG", "onCreate: $errorString")
+                                viewModel.setIsError(
+                                    message = errorString,
+                                )
+                            }
+                        } else {
+                            signUpUser(
+                                email = email.trim(),
+                                password = password.trim()
+                            ) { errorString ->
+                                Log.d("TAG", "onCreate: $errorString")
+
+                                viewModel.setIsError(
+                                    message = errorString,
+                                )
+                            }
                         }
+
                     }
                 },
                 onEmailChange = viewModel::setEmail,
@@ -93,11 +100,11 @@ class AuthActivity : ComponentActivity() {
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     viewModel.setIsError(
-                                        error = "Password reset email sent",
+                                        message = "Password reset email sent",
                                     )
                                 } else {
                                     viewModel.setIsError(
-                                        error = task.exception?.message.toString(),
+                                        message = task.exception?.message.toString(),
                                     )
                                 }
                             }
