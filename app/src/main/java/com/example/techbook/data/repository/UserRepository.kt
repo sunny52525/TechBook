@@ -135,6 +135,21 @@ class UserRepository(
         }
     }
 
+    fun getBadgesFromCollege(college: String?) = flow<Resource<List<Badge>>> {
+        emit(Resource.Loading())
+        try {
+
+
+            val ref = (db.collection("badges").document(college ?: "Unnamed").get()
+                .await().data?.get("badges") as? List<Map<String, Any>>?)?.map {
+                Badge.fromMap(it)
+            }
+            emit(Resource.Success(ref ?: emptyList()))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message.toString()))
+        }
+    }
+
 
     companion object {
         private const val TAG = "UserRepository"

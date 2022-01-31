@@ -28,7 +28,7 @@ import com.example.techbook.ui.theme.Orange200
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProfileScreen(user: UserModel, data: List<Badge>?) {
+fun ProfileScreen(user: UserModel, data: List<Badge>?,paddingValues: PaddingValues) {
 
     var showError by remember { mutableStateOf(false) }
     var showDialog by remember {
@@ -41,6 +41,7 @@ fun ProfileScreen(user: UserModel, data: List<Badge>?) {
         Modifier
             .fillMaxSize()
             .padding(grid_2)
+            .padding(paddingValues)
     ) {
         Spacer(modifier = Modifier.height(20.dp))
         Header(user = user, onBadgeClick = {

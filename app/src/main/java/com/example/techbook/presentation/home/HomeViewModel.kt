@@ -27,6 +27,9 @@ class HomeViewModel @Inject constructor(
     private val allBadges = mutableStateOf<Resource<List<Badge>>>(Resource.Success(emptyList()))
     val badges: State<Resource<List<Badge>>> = allBadges
 
+    private val allBadgeListFromCollege =
+        mutableStateOf<Resource<List<Badge>>>(Resource.Success(emptyList()))
+    val badgeListFromCollege: State<Resource<List<Badge>>> = allBadgeListFromCollege
 
     var uiState = mutableStateOf(UiState())
         private set
@@ -42,6 +45,15 @@ class HomeViewModel @Inject constructor(
 
         userRepository.getUser().onEach {
             _user.value = it
+            if(it is Resource.Success){
+                getBadgesFromCollege(it.data?.college)
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun getBadgesFromCollege(college: String?) {
+        userRepository.getBadgesFromCollege(college).onEach {
+            allBadgeListFromCollege.value = it
         }.launchIn(viewModelScope)
     }
 
@@ -83,6 +95,7 @@ class HomeViewModel @Inject constructor(
                 if (addBadgeResult is Resource.Success) {
                     imageList.value = emptyList()
                     getUser()
+                    getAllBadges()
 
                     onSuccess()
                     setLoading(false)
@@ -101,6 +114,9 @@ class HomeViewModel @Inject constructor(
             allBadges.value = it
         }.launchIn(viewModelScope)
     }
+
+
+
 }
 
 

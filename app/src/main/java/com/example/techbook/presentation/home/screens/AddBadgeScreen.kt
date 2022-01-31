@@ -7,10 +7,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -40,7 +37,8 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 fun AddBadgeScreen(
     imageUrlList: List<String?>,
     onImageSelected: (Uri) -> Unit,
-    onBadgeAdd: (Badge) -> Unit
+    padding: PaddingValues,
+    onBadgeAdd: (Badge) -> Unit,
 ) {
 
 
@@ -70,7 +68,7 @@ fun AddBadgeScreen(
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
-            .padding(start = Dimens.grid_1_5, end = Dimens.grid_1),
+            .padding(start = Dimens.grid_1_5, end = Dimens.grid_1).padding(padding),
         verticalArrangement = Arrangement.spacedBy(Dimens.grid_1_5)
     ) {
 

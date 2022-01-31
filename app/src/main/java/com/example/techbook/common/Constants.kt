@@ -1420,6 +1420,7 @@ object Constants {
         "SNS College of Technology",
         "RVS College of engineering and technology",
         "Nehru Institute OF Engineering & Technology",
+
     )
     val BottomNavItems = listOf(
         BottomNavItem(

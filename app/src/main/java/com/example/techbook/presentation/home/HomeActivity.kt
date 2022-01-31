@@ -51,9 +51,11 @@ class HomeActivity : ComponentActivity() {
                     val imageList by viewModel.imageList
                     val user by viewModel.user
                     val allBadges by viewModel.badges
+                    val allBadgesListByCollege by viewModel.badgeListFromCollege
+
                     Scaffold(
                         bottomBar = { NavigationBar(navController = navController) }
-                    ) {
+                    ) {padding->
 
                         val isError by viewModel.uiState
 
@@ -72,13 +74,24 @@ class HomeActivity : ComponentActivity() {
                         ) {
 
                             composable(Routes.Home.route) {
-                                HomeScreen()
+
+                                if (user is Resource.Success && user.data != null) {
+                                    HomeScreen(user = user.data!!,allBadgesListByCollege.data,padding)
+                                }
+                                if (user is Resource.Loading) {
+                                    LoadingDialog()
+                                }
+                                if (user is Resource.Error) {
+                                    ErrorDialog(user.message.toString()) {
+                                        viewModel.setIsError(isError = false)
+                                    }
+                                }
                             }
 
                             composable(Routes.Profile.route) {
 
                                 if (user is Resource.Success && user.data != null) {
-                                    ProfileScreen(user = user.data!!,allBadges.data)
+                                    ProfileScreen(user = user.data!!, allBadges.data,padding)
                                 }
                                 if (user is Resource.Loading) {
                                     LoadingDialog()
@@ -103,7 +116,7 @@ class HomeActivity : ComponentActivity() {
                                     }
                                     viewModel.uploadImage(bitmap)
 
-                                }) { badge ->
+                                },padding=padding) { badge ->
                                     viewModel.addBadge(badge) {
                                         navController.navigate(Routes.Home.route)
                                     }
