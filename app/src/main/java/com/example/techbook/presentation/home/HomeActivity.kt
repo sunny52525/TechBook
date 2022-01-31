@@ -124,7 +124,9 @@ class HomeActivity : ComponentActivity() {
 
                                 }, padding = padding) { badge ->
                                     viewModel.addBadge(badge) {
-                                        navController.navigate(Routes.Home.route)
+                                        navController.navigate(Routes.Home.route){
+                                            popUpTo(Routes.Home.route)
+                                        }
                                     }
                                 }
                             }

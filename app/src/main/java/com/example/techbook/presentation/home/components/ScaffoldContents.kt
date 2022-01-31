@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.techbook.common.Constants
+import com.example.techbook.presentation.home.navigation.Routes
 import com.example.techbook.ui.theme.Orange200
 
 
@@ -27,7 +28,9 @@ fun NavigationBar(navController: NavHostController) {
                 onClick = {
 
                     if (currentRoute != navItem.route)
-                        navController.navigate(navItem.route)
+                        navController.navigate(navItem.route){
+                            popUpTo(Routes.Home.route)
+                        }
                 },
 
                 icon = {

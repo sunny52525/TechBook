@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.techbook.common.ExtensionFunctions.showToast
 import com.example.techbook.presentation.auth.AuthViewModel
 import com.example.techbook.presentation.components.ErrorDialog
@@ -31,6 +32,7 @@ class AuthActivity : ComponentActivity() {
     private val auth by lazy {
         Firebase.auth
     }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,6 +150,7 @@ class AuthActivity : ComponentActivity() {
 
         }
 
+        installSplashScreen()
 
     }
 

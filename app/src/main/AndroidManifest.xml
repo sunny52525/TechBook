@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TechBookSocialMediaForProgrammers"
+        android:theme="@style/Theme.App.Starting"
         tools:targetApi="31">
         <activity
             android:name=".presentation.home.HomeActivity"
@@ -24,7 +24,8 @@
             android:theme="@style/Theme.HomeScreen" />
         <activity
             android:name=".presentation.auth.screens.AuthActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.App.Starting"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
