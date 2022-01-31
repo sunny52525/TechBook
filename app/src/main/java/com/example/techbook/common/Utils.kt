@@ -9,4 +9,12 @@ object Utils {
         val regex = Regex("^[0-9]{4}-[0-9]{4}$")
         return regex.matches(year)
     }
+
+
+    //function to get date in format dd/mm/yyyy hh:mm
+    fun getDateAndTime():String{
+        val date = java.util.Date()
+        val formatter = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm")
+        return formatter.format(date)
+    }
 }

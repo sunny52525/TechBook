@@ -64,7 +64,7 @@ class UserRepository(
         }
     }
 
-    fun uploadImage(bitmap: Bitmap) = flow<ImageUploadState> {
+    fun uploadImage(bitmap: Bitmap) = flow {
         emit(ImageUploadState(isLoading = true))
         try {
             val firebaseUser = Firebase.auth.currentUser
@@ -91,17 +91,47 @@ class UserRepository(
 
     }
 
-    fun addBadge(badge: Badge) = flow<Resource<Boolean>> {
+    fun addBadge(badge: Badge) = flow {
         emit(Resource.Loading())
         try {
             Firebase.auth.currentUser?.let { firebaseUser ->
                 val badgeRef = db.collection("users").document(firebaseUser.uid)
                 badgeRef.update("badges", FieldValue.arrayUnion(badge.toMap())).await()
+
+                val allBadge = db.collection("badges").document(badge.collegeName ?: "Unnamed")
+
+                try {
+                    allBadge.update("badges", FieldValue.arrayUnion(badge.toMap())).await()
+
+                } catch (e: Exception) {
+                    allBadge.set(mapOf("badges" to badge.toMap())).await()
+
+                }
                 emit(Resource.Success(true))
             }
 
         } catch (e: Exception) {
             emit(Resource.Error(e.message.toString(), false))
+        }
+    }
+
+    fun getAllBadges() = flow<Resource<List<Badge>>> {
+
+        emit(Resource.Loading())
+        try {
+            Firebase.auth.currentUser?.uid?.let { uid ->
+
+                val allBadges = (db.collection("users").document(uid).get()
+                    .await().data?.get("badges") as? List<Map<String, Any>>)?.map {
+                    Badge.fromMap(it)
+                }
+
+                Log.d(TAG, "getAllBadges: $allBadges")
+                emit(Resource.Success(allBadges ?: emptyList()))
+            }
+
+        } catch (e: Exception) {
+            emit(Resource.Error(e.message.toString()))
         }
     }
 

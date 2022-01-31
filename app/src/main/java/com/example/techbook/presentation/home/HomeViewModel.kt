@@ -24,6 +24,9 @@ class HomeViewModel @Inject constructor(
     private val _user = mutableStateOf<Resource<UserModel?>>(Resource.Success(null))
     val user: State<Resource<UserModel?>> = _user
 
+    private val allBadges = mutableStateOf<Resource<List<Badge>>>(Resource.Success(emptyList()))
+    val badges: State<Resource<List<Badge>>> = allBadges
+
 
     var uiState = mutableStateOf(UiState())
         private set
@@ -32,6 +35,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getUser()
+        getAllBadges()
     }
 
     private fun getUser() {
@@ -69,20 +73,32 @@ class HomeViewModel @Inject constructor(
     }
 
     fun addBadge(badge: Badge, onSuccess: () -> Unit) {
-        userRepository.addBadge(badge).onEach { addBadgeResult ->
-            if (addBadgeResult is Resource.Success) {
-                imageList.value = emptyList()
-                getUser()
+        userRepository.addBadge(
+            badge.copy(
+                name = user.value.data?.name.toString(),
+                collegeName = user.value.data?.college.toString()
+            )
+        )
+            .onEach { addBadgeResult ->
+                if (addBadgeResult is Resource.Success) {
+                    imageList.value = emptyList()
+                    getUser()
 
-                onSuccess()
-                setLoading(false)
-            }
-            if (addBadgeResult is Resource.Error) {
-                setIsError(addBadgeResult.message.toString())
-            }
-            if (addBadgeResult is Resource.Loading) {
-                setLoading()
-            }
+                    onSuccess()
+                    setLoading(false)
+                }
+                if (addBadgeResult is Resource.Error) {
+                    setIsError(addBadgeResult.message.toString())
+                }
+                if (addBadgeResult is Resource.Loading) {
+                    setLoading()
+                }
+            }.launchIn(viewModelScope)
+    }
+
+    private fun getAllBadges() {
+        userRepository.getAllBadges().onEach {
+            allBadges.value = it
         }.launchIn(viewModelScope)
     }
 }

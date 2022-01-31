@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.techbook.common.Resource
 import com.example.techbook.presentation.components.ErrorDialog
 import com.example.techbook.presentation.components.LoadingDialog
 import com.example.techbook.presentation.home.components.NavigationBar
@@ -49,6 +50,7 @@ class HomeActivity : ComponentActivity() {
 
                     val imageList by viewModel.imageList
                     val user by viewModel.user
+                    val allBadges by viewModel.badges
                     Scaffold(
                         bottomBar = { NavigationBar(navController = navController) }
                     ) {
@@ -74,7 +76,18 @@ class HomeActivity : ComponentActivity() {
                             }
 
                             composable(Routes.Profile.route) {
-                                ProfileScreen(user = user)
+
+                                if (user is Resource.Success && user.data != null) {
+                                    ProfileScreen(user = user.data!!,allBadges.data)
+                                }
+                                if (user is Resource.Loading) {
+                                    LoadingDialog()
+                                }
+                                if (user is Resource.Error) {
+                                    ErrorDialog(user.message.toString()) {
+                                        viewModel.setIsError(isError = false)
+                                    }
+                                }
 
                             }
                             composable(Routes.AddBadge.route) {

@@ -25,7 +25,9 @@ fun NavigationBar(navController: NavHostController) {
             BottomNavigationItem(
                 selected = currentRoute == navItem.route,
                 onClick = {
-                    navController.navigate(navItem.route)
+
+                    if (currentRoute != navItem.route)
+                        navController.navigate(navItem.route)
                 },
 
                 icon = {
