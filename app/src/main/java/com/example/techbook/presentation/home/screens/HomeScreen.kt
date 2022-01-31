@@ -71,34 +71,36 @@ fun HomeScreen(
             }
         }
 
-        if (data?.isEmpty() == true){
+        if (data.isNullOrEmpty()) {
             item {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "No badges found, Invite them to see their badges",
-                        style = MaterialTheme.typography.h6
-                    )
+                    Column {
+                        Text(
+                            text = "No badges found, Invite them to see their badges",
+                            style = MaterialTheme.typography.h6
+                        )
 
-                    Card(onClick = {
-                        val sendIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                "${user.name} has sent you 10 referral points, Sign up to redeem them https://com.techbook.com/refer/${Firebase.auth.currentUser?.uid}"
-                            )
-                            type = "text/plain"
-                        }
-                        val shareIntent = Intent.createChooser(sendIntent, null)
-                        context.startActivity(shareIntent)
-                    }, modifier = Modifier.height(50.dp)) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            Text(text = "Refer")
+                        Card(onClick = {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "${user.name} has sent you 10 referral points, Sign up to redeem them https://com.techbook.com/refer/${Firebase.auth.currentUser?.uid}"
+                                )
+                                type = "text/plain"
+                            }
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+                            context.startActivity(shareIntent)
+                        }, modifier = Modifier.height(50.dp)) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                Text(text = "Refer")
+                            }
                         }
                     }
                 }
