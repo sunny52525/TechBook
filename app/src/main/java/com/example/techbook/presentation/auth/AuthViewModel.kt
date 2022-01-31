@@ -35,6 +35,12 @@ class AuthViewModel @Inject constructor(
     var college = mutableStateOf("Select College")
         private set
 
+    var referral = mutableStateOf("")
+        private set
+
+    fun setReferral(referral: String) {
+        this.referral.value = referral
+    }
 
     fun setCollege(college: String) {
         this.college.value = college
@@ -79,6 +85,7 @@ class AuthViewModel @Inject constructor(
 
     fun createUser(onSuccess: () -> Unit) {
         createUserUserCase(
+            referral =referral.value,
             user = UserModel(
                 name = name.value,
                 college = college.value,
@@ -90,7 +97,7 @@ class AuthViewModel @Inject constructor(
             }, onError = {
 
                 setIsError(it.toString())
-            }
+            },
 
         )
     }

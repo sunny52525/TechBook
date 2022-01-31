@@ -9,6 +9,7 @@ data class UserModel(
     val college: String = "",
     val email: String = "",
     val year : String? = "",
+    val referPoint: String = "0",
 ) {
     fun toHashMap(): HashMap<String, Any?> {
         val map = HashMap<String, Any?>()
@@ -18,21 +19,23 @@ data class UserModel(
         map["college"] = college
         map["email"] = email
         map["year"] = year
+        map["referPoint"] = referPoint
         return map
     }
 
     companion object {
 
-        fun fromMap(map: Map<String, Any?>): UserModel {
-            return UserModel(
-                name = map["name"] as String,
-                id = map["id"] as String?,
-                iconUrl = map["iconUrl"] as String?,
-                college = map["college"] as String,
-                email = map["email"] as String,
-                year = map["year"] as String
-            )
-        }
+//        fun fromMap(map: Map<String, Any?>): UserModel {
+//            return UserModel(
+//                name = map["name"] as String,
+//                id = map["id"] as String?,
+//                iconUrl = map["iconUrl"] as String?,
+//                college = map["college"] as String,
+//                email = map["email"] as String,
+//                year = map["year"] as String,
+//                referPoint = (map["referPoint"] as String) ?: 0
+//            )
+//        }
     }
 
 }

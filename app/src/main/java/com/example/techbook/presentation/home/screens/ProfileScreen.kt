@@ -73,6 +73,7 @@ fun ProfileScreen(user: UserModel, data: List<Badge>?, paddingValues: PaddingVal
             ProfileInfo(title = "Name", value = user.name)
             ProfileInfo(title = "Email", value = user.email)
             ProfileInfo(title = "College", value = user.college)
+            ProfileInfo(title = "Referral points", value = user.referPoint.toString())
 
 
             Card(onClick = {
@@ -86,6 +87,25 @@ fun ProfileScreen(user: UserModel, data: List<Badge>?, paddingValues: PaddingVal
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(text = "Logout")
+                }
+            }
+            Card(onClick = {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "${user.name} has sent you 10 referral points, Sign up to redeem them https://com.techbook.com/refer/${Firebase.auth.currentUser?.uid}"
+                    )
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                context.startActivity(shareIntent)
+            }, modifier = Modifier.height(50.dp)) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(text = "Refer")
                 }
             }
         }

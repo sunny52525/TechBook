@@ -1,6 +1,7 @@
 package com.example.techbook.presentation.home.screens
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,8 @@ import com.example.techbook.domain.model.UserModel
 import com.example.techbook.ui.theme.Dimens
 import com.example.techbook.ui.theme.Orange200
 import com.example.techbook.ui.theme.Orange500
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
@@ -68,6 +71,39 @@ fun HomeScreen(
             }
         }
 
+        if (data?.isEmpty() == true){
+            item {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No badges found, Invite them to see their badges",
+                        style = MaterialTheme.typography.h6
+                    )
+
+                    Card(onClick = {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                "${user.name} has sent you 10 referral points, Sign up to redeem them https://com.techbook.com/refer/${Firebase.auth.currentUser?.uid}"
+                            )
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        context.startActivity(shareIntent)
+                    }, modifier = Modifier.height(50.dp)) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text(text = "Refer")
+                        }
+                    }
+                }
+            }
+        }
 
     }
 

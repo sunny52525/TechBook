@@ -1,6 +1,7 @@
 package com.example.techbook.presentation.auth.screens
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -20,6 +21,7 @@ import com.example.techbook.presentation.home.HomeActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
@@ -44,6 +46,11 @@ class AuthActivity : ComponentActivity() {
             val year by viewModel.year
             val college by viewModel.college
 
+            val refer by viewModel.referral
+            var showReferMessage by remember {
+                mutableStateOf(true)
+            }
+
             var dropdownExpanded by remember { mutableStateOf(false) }
 
             val isError by viewModel.isError
@@ -58,6 +65,11 @@ class AuthActivity : ComponentActivity() {
                 }
             }
 
+            if (refer.isNotEmpty() && showReferMessage) {
+                ErrorDialog("You are referred by, Complete your profile to get 10 points") {
+                    showReferMessage = false
+                }
+            }
 
 
             LoginScreen(
@@ -172,6 +184,19 @@ class AuthActivity : ComponentActivity() {
             }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val appLinkAction = intent?.action
+        val appLinkData: Uri? = intent?.data
+        if (Intent.ACTION_VIEW == appLinkAction) {
+            Log.d(TAG, "onNewIntent: " + appLinkData?.toString())
+            appLinkData?.lastPathSegment?.let {
+                Log.d(TAG, "onNewIntent: $it")
+                viewModel.setReferral(it)
+            }
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
@@ -183,5 +208,9 @@ class AuthActivity : ComponentActivity() {
 
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "AuthActivity"
     }
 }

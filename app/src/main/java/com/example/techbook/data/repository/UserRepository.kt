@@ -20,13 +20,31 @@ class UserRepository(
 
     ) {
 
-    fun createUser(user: UserModel, onSuccess: () -> Unit, onError: (String?) -> Unit) {
+    fun createUser(
+        user: UserModel,
+        onSuccess: () -> Unit,
+        onError: (String?) -> Unit,
+        referral: String
+    ) {
         val firebaseUser = Firebase.auth.currentUser
         firebaseUser?.let {
-            val userHashMap = user.copy(id = firebaseUser.uid).toHashMap()
+            val userHashMap = user.copy(id = firebaseUser.uid, referPoint = "10").toHashMap()
             db.collection("users").document(firebaseUser.uid).set(userHashMap)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
+
+
+                        db.collection("users").document(referral).get()
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val referPoint =
+                                        (task.result?.data?.get("referPoint") as String).toIntOrNull()
+                                            ?: 0
+                                    db.collection("users").document(referral)
+                                        .update("referPoint", "${referPoint + 10}")
+                                }
+                            }
+
                         onSuccess()
 
                         Log.d("TAG", "createUser:SUCCESS")
@@ -143,7 +161,8 @@ class UserRepository(
             val ref = (db.collection("badges").document(college ?: "Unnamed").get()
                 .await().data)
             try {
-                val res = (ref?.get("badges") as? List<Map<String, Any>>?) ?: throw Exception("No Badges Found")
+                val res = (ref?.get("badges") as? List<Map<String, Any>>?)
+                    ?: throw Exception("No Badges Found")
                 val result = res?.map {
                     Badge.fromMap(it)
                 }

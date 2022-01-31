@@ -1,8 +1,8 @@
 package com.example.techbook.domain.use_case
 
+import androidx.compose.runtime.MutableState
 import com.example.techbook.data.repository.UserRepository
 import com.example.techbook.domain.model.UserModel
-import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 class CreateUserUserCase @Inject constructor(
@@ -11,13 +11,14 @@ class CreateUserUserCase @Inject constructor(
     operator fun invoke(
         user: UserModel,
         onSuccess: () -> Unit,
-        onError: (String?) -> Unit
+        onError: (String?) -> Unit,
+        referral: String
     ) {
          repository.createUser(user, onSuccess = {
             onSuccess()
         }, onError = {
             onError(it)
-        })
+        },referral = referral)
 
     }
 }
