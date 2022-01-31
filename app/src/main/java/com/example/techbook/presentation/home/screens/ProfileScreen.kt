@@ -1,5 +1,7 @@
 package com.example.techbook.presentation.home.screens
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,21 +23,24 @@ import com.example.techbook.common.Constants.DUMMY_IMAGE
 import com.example.techbook.common.ExtensionFunctions.showToast
 import com.example.techbook.domain.model.Badge
 import com.example.techbook.domain.model.UserModel
+import com.example.techbook.presentation.auth.screens.AuthActivity
 import com.example.techbook.presentation.home.components.Header
 import com.example.techbook.presentation.home.components.ProfileInfo
 import com.example.techbook.ui.theme.Dimens.grid_2
 import com.example.techbook.ui.theme.Orange200
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProfileScreen(user: UserModel, data: List<Badge>?,paddingValues: PaddingValues) {
+fun ProfileScreen(user: UserModel, data: List<Badge>?, paddingValues: PaddingValues) {
 
     var showError by remember { mutableStateOf(false) }
     var showDialog by remember {
         mutableStateOf(false)
     }
 
-    val context = LocalContext.current
+    val context = LocalContext.current as Activity
 
     Column(
         Modifier
@@ -56,7 +61,7 @@ fun ProfileScreen(user: UserModel, data: List<Badge>?,paddingValues: PaddingValu
             Card(onClick = {
                 showDialog = true
 
-            }, modifier = Modifier.height(100.dp)) {
+            }, modifier = Modifier.height(50.dp)) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.CenterStart
@@ -69,7 +74,20 @@ fun ProfileScreen(user: UserModel, data: List<Badge>?,paddingValues: PaddingValu
             ProfileInfo(title = "Email", value = user.email)
             ProfileInfo(title = "College", value = user.college)
 
-//            }
+
+            Card(onClick = {
+                Intent(context, AuthActivity::class.java).apply {
+                    Firebase.auth.signOut()
+                    context.startActivity(this)
+                }
+            }, modifier = Modifier.height(50.dp)) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(text = "Logout")
+                }
+            }
         }
     }
 

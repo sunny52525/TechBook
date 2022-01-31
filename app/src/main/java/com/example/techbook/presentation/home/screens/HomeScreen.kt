@@ -26,7 +26,12 @@ import com.example.techbook.ui.theme.Orange500
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(user: UserModel, data: List<Badge>?, padding: PaddingValues) {
+fun HomeScreen(
+    user: UserModel,
+    data: List<Badge>?,
+    padding: PaddingValues,
+    onSearch: (String) -> Unit
+) {
 
     var isInSearchMode by remember {
         mutableStateOf(false)
@@ -57,7 +62,7 @@ fun HomeScreen(user: UserModel, data: List<Badge>?, padding: PaddingValues) {
                 }
             }
         }
-        val forEach = data?.forEach {
+        data?.forEach {
             item {
                 BadgeCard(it)
             }
@@ -67,9 +72,10 @@ fun HomeScreen(user: UserModel, data: List<Badge>?, padding: PaddingValues) {
     }
 
     if (isInSearchMode) {
-        SearchCollege(onDismiss = { isInSearchMode = false }, onSearch = { collegeName, year ->
+        SearchCollege(onDismiss = { isInSearchMode = false }, onSearch = { collegeName ->
             searchQuery = collegeName
             isInSearchMode = false
+            onSearch(collegeName)
         })
     }
 
@@ -78,13 +84,11 @@ fun HomeScreen(user: UserModel, data: List<Badge>?, padding: PaddingValues) {
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun SearchCollege(onDismiss: () -> Unit, onSearch: (String, String) -> Unit) {
+fun SearchCollege(onDismiss: () -> Unit, onSearch: (String) -> Unit) {
     var query by remember {
         mutableStateOf("")
     }
-    var year by remember {
-        mutableStateOf("")
-    }
+
     var college by remember {
         mutableStateOf("")
     }
@@ -119,35 +123,9 @@ fun SearchCollege(onDismiss: () -> Unit, onSearch: (String, String) -> Unit) {
                     }
                 )
 
-                Button(onClick = {
-                    onSearch(college, year)
-                }) {
-                    Text("Search")
-                }
+
             }
 
-            OutlinedTextField(
-                value = year,
-                onValueChange = {
-                    year = it
-                },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                shape = RoundedCornerShape(Dimens.grid_1_25),
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.Gray,
-                    backgroundColor = Color.White,
-                    focusedIndicatorColor = Orange200,
-                    unfocusedIndicatorColor = Orange500
-                ),
-                placeholder = {
-                    Text(
-                        text = "Enter Year(eg 2019-2020)",
-                        color = Color.Black,
-                        modifier = Modifier.alpha(0.5f)
-                    )
-                }
-            )
 
 
             LazyColumn(content = {
@@ -158,7 +136,7 @@ fun SearchCollege(onDismiss: () -> Unit, onSearch: (String, String) -> Unit) {
                 items(filter(query)) {
                     Card(onClick = {
                         college = it
-                        onSearch(college, year)
+                        onSearch(college)
                     }) {
                         Text(text = it)
                     }

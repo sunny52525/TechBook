@@ -45,10 +45,9 @@ class HomeViewModel @Inject constructor(
 
         userRepository.getUser().onEach {
             _user.value = it
-            if(it is Resource.Success){
+            if (it is Resource.Success) {
                 getBadgesFromCollege(it.data?.college)
-            }
-        }.launchIn(viewModelScope)
+            } }.launchIn(viewModelScope)
     }
 
     private fun getBadgesFromCollege(college: String?) {
@@ -88,8 +87,9 @@ class HomeViewModel @Inject constructor(
         userRepository.addBadge(
             badge.copy(
                 name = user.value.data?.name.toString(),
-                collegeName = user.value.data?.college.toString()
-            )
+                collegeName = user.value.data?.college.toString(),
+
+                )
         )
             .onEach { addBadgeResult ->
                 if (addBadgeResult is Resource.Success) {
@@ -115,6 +115,12 @@ class HomeViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    fun searchBadgesByCollege(collegeName: String) {
+
+        userRepository.getBadgesFromCollege(collegeName).onEach {
+            allBadgeListFromCollege.value = it
+        }.launchIn(viewModelScope)
+    }
 
 
 }

@@ -83,6 +83,7 @@ class AuthViewModel @Inject constructor(
                 name = name.value,
                 college = college.value,
                 email = email.value,
+                year = year.value,
             ), onSuccess = {
                 onSuccess()
 

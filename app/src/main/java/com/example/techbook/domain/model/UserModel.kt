@@ -8,6 +8,7 @@ data class UserModel(
     val iconUrl: String? = DUMMY_IMAGE,
     val college: String = "",
     val email: String = "",
+    val year : String? = "",
 ) {
     fun toHashMap(): HashMap<String, Any?> {
         val map = HashMap<String, Any?>()
@@ -16,6 +17,7 @@ data class UserModel(
         map["iconUrl"] = iconUrl ?: ""
         map["college"] = college
         map["email"] = email
+        map["year"] = year
         return map
     }
 
@@ -28,6 +30,7 @@ data class UserModel(
                 iconUrl = map["iconUrl"] as String?,
                 college = map["college"] as String,
                 email = map["email"] as String,
+                year = map["year"] as String
             )
         }
     }

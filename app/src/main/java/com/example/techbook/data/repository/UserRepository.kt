@@ -141,10 +141,22 @@ class UserRepository(
 
 
             val ref = (db.collection("badges").document(college ?: "Unnamed").get()
-                .await().data?.get("badges") as? List<Map<String, Any>>?)?.map {
-                Badge.fromMap(it)
+                .await().data)
+            try {
+                val res = (ref?.get("badges") as? List<Map<String, Any>>?) ?: throw Exception("No Badges Found")
+                val result = res?.map {
+                    Badge.fromMap(it)
+                }
+                emit(Resource.Success(result ?: emptyList()))
+            } catch (e: Exception) {
+                val res = (ref?.get("badges") as? Map<String, Any>?)
+                val result =
+                    Badge.fromMap(res ?: emptyMap())
+
+                emit(Resource.Success(listOf(result) ?: emptyList()))
             }
-            emit(Resource.Success(ref ?: emptyList()))
+
+
         } catch (e: Exception) {
             emit(Resource.Error(e.message.toString()))
         }
